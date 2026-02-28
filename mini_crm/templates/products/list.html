@@ -1,0 +1,84 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-2">
+  <h4 class="m-0">Products</h4>
+  <div class="d-flex gap-2">
+    <input id="productSearch" class="form-control" style="max-width:260px" placeholder="Realtime filter...">
+    {% if session.user.role == "admin" %}
+      <a class="btn btn-dark" href="{{ url_for('products_new') }}">Add Product</a>
+    {% endif %}
+    <form method="post" action="{{ url_for('checkout') }}">
+      <button class="btn btn-outline-dark">Checkout</button>
+    </form>
+  </div>
+</div>
+
+<form class="row g-2 mb-3" method="get">
+  <div class="col-md-4">
+    <input class="form-control" name="q" value="{{ q }}" placeholder="Search (server)">
+  </div>
+  <div class="col-md-3">
+    <select class="form-select" name="cat">
+      <option value="">All Category</option>
+      {% for c in cats %}
+        <option value="{{ c.category }}" {{ "selected" if cat==c.category else "" }}>{{ c.category }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="col-md-2">
+    <button class="btn btn-dark w-100">Apply</button>
+  </div>
+</form>
+
+<div class="row g-3">
+  {% for p in rows %}
+  <div class="col-md-4 product-card">
+    <div class="card h-100">
+      {% if p.image_path %}
+        <img src="{{ url_for('static', filename=p.image_path) }}" class="card-img-top" style="height:180px;object-fit:cover">
+      {% endif %}
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <h5 class="card-title">{{ p.title }}</h5>
+          <b>₹{{ p.price }}</b>
+        </div>
+        <div class="text-muted small">{{ p.category }}</div>
+        <div class="small mt-2">Stock: {{ p.stock }}</div>
+
+        <div class="d-flex gap-2 mt-3">
+          <form method="post" action="{{ url_for('cart_add', pid=p.id) }}">
+            <button class="btn btn-outline-dark btn-sm">Add to Cart</button>
+          </form>
+
+          {% if session.user.role == "admin" %}
+            <a class="btn btn-outline-dark btn-sm" href="{{ url_for('products_edit', pid=p.id) }}">Edit</a>
+            <form method="post" action="{{ url_for('products_delete', pid=p.id) }}">
+              <button class="btn btn-outline-danger btn-sm">Delete</button>
+            </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% if cart_items %}
+<div class="card p-3 mt-3">
+  <h5>Order Summary</h5>
+  <ul class="list-group">
+    {% for it in cart_items %}
+      <li class="list-group-item d-flex justify-content-between">
+        <span>{{ it.p.title }} x {{ it.qty }}</span>
+        <b>₹{{ it.line }}</b>
+      </li>
+    {% endfor %}
+  </ul>
+  <div class="d-flex justify-content-between mt-2">
+    <span>Total</span><b>₹{{ cart_total }}</b>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,120 @@
+
+
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="row g-3">
+  <div class="col-md-3"><div class="card p-3"><div class="text-muted">Users</div><h3>{{ total_users }}</h3></div></div>
+  <div class="col-md-3"><div class="card p-3"><div class="text-muted">Students</div><h3>{{ total_students }}</h3></div></div>
+  <div class="col-md-3"><div class="card p-3"><div class="text-muted">Products</div><h3>{{ total_products }}</h3></div></div>
+  <div class="col-md-3"><div class="card p-3"><div class="text-muted">Orders</div><h3>{{ total_orders }}</h3></div></div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-md-6">
+    <div class="card p-3">
+      <h5>Highest Price Product</h5>
+      {% if highest_price %}
+        <div class="d-flex justify-content-between">
+          <div>{{ highest_price.title }}</div>
+          <b>₹{{ highest_price.price }}</b>
+        </div>
+      {% else %}
+        <div class="text-muted">No products yet</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card p-3">
+      <h5>Quick Actions</h5>
+      <div class="d-flex gap-2 flex-wrap">
+        <a class="btn btn-outline-dark" href="{{ url_for('students_new') }}">Add Student</a>
+        <a class="btn btn-outline-dark" href="{{ url_for('products_list') }}">View Products</a>
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#contactModal">Contact</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mt-1">
+  <div class="col-md-7">
+    <div class="card p-3">
+      <h5>Monthly Student Registrations</h5>
+      <div class="table-responsive">
+        <table class="table table-sm">
+          <thead><tr><th>Month</th><th>Count</th></tr></thead>
+          <tbody>
+            {% for r in monthly %}
+              <tr><td>{{ r.ym }}</td><td>{{ r.c }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-5">
+    <div class="card p-3">
+      <h5>Feedback</h5>
+      <form method="post" action="{{ url_for('feedback') }}" class="needs-validation" novalidate>
+        <textarea required name="message" class="form-control" rows="4" placeholder="Type feedback..."></textarea>
+        <div class="invalid-feedback">Message required</div>
+        <button class="btn btn-dark mt-2">Send</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% if orders %}
+<div class="card p-3 mt-3">
+  <h5>Your Orders</h5>
+  <div class="table-responsive">
+    <table class="table table-sm">
+      <thead><tr><th>ID</th><th>Total</th><th>Date</th></tr></thead>
+      <tbody>
+        {% for o in orders %}
+          <tr><td>{{ o.id }}</td><td>₹{{ o.total }}</td><td>{{ o.created_at }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+<!-- 5) Modal-based Contact Form -->
+<div class="modal fade" id="contactModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form method="post" action="{{ url_for('contact') }}" class="needs-validation" novalidate>
+        <div class="modal-header">
+          <h5 class="modal-title">Contact</h5>
+          <button class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-2">
+            <label class="form-label">Name</label>
+            <input required name="name" class="form-control">
+            <div class="invalid-feedback">Required</div>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Email</label>
+            <input required type="email" name="email" class="form-control">
+            <div class="invalid-feedback">Required</div>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Message</label>
+            <textarea required name="message" class="form-control" rows="3"></textarea>
+            <div class="invalid-feedback">Required</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary" data-bs-dismiss="modal" type="button">Close</button>
+          <button class="btn btn-dark">Submit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

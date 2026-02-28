@@ -1,0 +1,33 @@
+
+{% extends "layout.html" %}
+{% block content %}
+<div class="card p-4">
+  <h4>{{ "Add Student" if mode=="create" else "Edit Student" }}</h4>
+
+  <form class="needs-validation" novalidate method="post">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Name</label>
+        <input required name="name" class="form-control" value="{{ item.name if item else '' }}">
+        <div class="invalid-feedback">Required</div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Email</label>
+        <input required type="email" name="email" class="form-control" value="{{ item.email if item else '' }}">
+        <div class="invalid-feedback">Required</div>
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Phone</label>
+        <input name="phone" class="form-control" value="{{ item.phone if item else '' }}">
+      </div>
+      <div class="col-md-6">
+        <label class="form-label">Dept</label>
+        <input name="dept" class="form-control" value="{{ item.dept if item else '' }}">
+      </div>
+    </div>
+
+    <button class="btn btn-dark mt-3">Save</button>
+    <a class="btn btn-outline-secondary mt-3" href="{{ url_for('students_list') }}">Back</a>
+  </form>
+</div>
+{% endblock %}

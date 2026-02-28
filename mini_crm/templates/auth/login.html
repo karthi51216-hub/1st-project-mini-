@@ -1,0 +1,32 @@
+
+
+{% extends "layout.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-5">
+    <div class="card p-4">
+      <h4 class="mb-3">Login</h4>
+      <form class="needs-validation" novalidate method="post">
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input required type="email" name="email" class="form-control">
+          <div class="invalid-feedback">Valid email required</div>
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label">Password</label>
+          <div class="input-group">
+            <input id="pwd" required minlength="6" type="password" name="password" class="form-control">
+            <button type="button" class="btn btn-outline-secondary"
+              data-toggle="password" data-target="#pwd">Show</button>
+            <div class="invalid-feedback">Min 6 chars</div>
+          </div>
+        </div>
+
+        <button class="btn btn-dark w-100 mt-3">Login</button>
+      </form>
+      <div class="small mt-3">No account? <a href="{{ url_for('register') }}">Register</a></div>
+    </div>
+  </div>
+</div>
+{% endblock %}
